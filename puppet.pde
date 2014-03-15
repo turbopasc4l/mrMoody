@@ -4,16 +4,18 @@ public class Puppet {
   PApplet parentApplet;
   Ani puppetAnimations;
   AniSequence jumpSequence, nodSequence;
-  PVector position;
+  float x, y;
   float trunkLength, armLength, legLength, neckLength, headDiameter;
   float trunkAngle, leftArmAngle, rightArmAngle, leftLegAngle, rightLegAngle, neckAngle;
   int lineWidth, smileWidth;
   color fillColor, lineColor;
   boolean smile;
+  boolean jumping;
   Puppet(PApplet applet) {
     parentApplet = applet;
     Ani.init(parentApplet);
-    position = new PVector(width/2, height/2);
+    x = width/2;
+    y = height/2;
     trunkLength = height/6;
     armLength = trunkLength;
     legLength = trunkLength*1.3;
@@ -35,7 +37,7 @@ public class Puppet {
   }
   private void drawBody() {
     pushMatrix();
-    translate(position.x, position.y);
+    translate(x, y);
     rotate(trunkAngle);
     drawTrunk();
     drawNeckAndHead();
@@ -89,9 +91,15 @@ public class Puppet {
   private void initJumpSequence() {
     jumpSequence = new AniSequence(parentApplet);
     jumpSequence.beginSequence();
-    jumpSequence.add(Ani.to(position, 0.15, "y", height/2 - trunkLength, Ani.QUAD_OUT));
-    jumpSequence.add(Ani.to(position, 0.15, "y", height/2, Ani.QUAD_IN));
+    jumpSequence.add(Ani.to(this, 0.15, "y", height/2 - trunkLength, Ani.QUAD_OUT, "onStart:jumpStarted"));
+    jumpSequence.add(Ani.to(this, 0.15, "y", height/2, Ani.QUAD_IN, "onEnd:jumpEnded"));
     jumpSequence.endSequence();
+  }
+  private void jumpStarted() {
+    jumping = true;
+  }
+  private void jumpEnded() {
+    jumping = false;
   }
   private void initNodSequence() {
     nodSequence = new AniSequence(parentApplet);
@@ -109,9 +117,12 @@ public class Puppet {
     rightLegAngle = PI/18;
     neckAngle = 0;
     smile = false;
+    jumping = false;
   }
   public void jump() {
-    jumpSequence.start();
+    if(!jumping) {
+      jumpSequence.start();
+    }
   }
   public void setArmsAngle(float angle) {
     leftArmAngle = angle;
