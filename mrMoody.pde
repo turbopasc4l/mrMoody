@@ -4,7 +4,7 @@ Puppet puppet;
 void setup() {
   size(500, 500);
   backgroundColor = 0;
-  puppet = new Puppet();
+  puppet = new Puppet(this);
 }
 
 void draw() {
@@ -14,20 +14,26 @@ void draw() {
 
 void keyPressed() {
   switch(key) {
-    case '1':
-      puppet.setSmile(true);
+    case 's':
+      puppet.toggleSmile();
       break;
-    case '2':
-      puppet.setSmile(false);
-      break;
-    case '3':
+    case 'a':
       puppet.setArmsAngle(PI*4/6);
       break;
-    case '4':
+    case 'A':
+      puppet.moveArms(PI*4/6);
+      break;
+    case 'l':
       puppet.setLegsAngle(PI*4/6);
       break;
-    case '5':
+    case 'r':
       puppet.reset();
+      break;
+    case 'n':
+      puppet.nod();
+      break;
+    case 'j':
+      puppet.jump();
       break;
   }
 }
