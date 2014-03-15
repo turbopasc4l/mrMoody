@@ -6,7 +6,7 @@ public class Puppet {
   AniSequence jumpSequence, nodSequence;
   float x, y;
   float trunkLength, armLength, legLength, neckLength, headDiameter;
-  float trunkAngle, leftArmAngle, rightArmAngle, leftLegAngle, rightLegAngle, neckAngle;
+  float trunkAngle, leftArmAngle, rightArmAngle, leftLegAngle, rightLegAngle, neckAngle, initialArmsAngle;
   int lineWidth, smileWidth;
   color fillColor, lineColor;
   boolean smile;
@@ -111,8 +111,9 @@ public class Puppet {
   }
   public void reset() {
     trunkAngle = 0;
-    leftArmAngle = PI/12;
-    rightArmAngle = PI/12;
+    initialArmsAngle = PI/12;
+    leftArmAngle = initialArmsAngle;
+    rightArmAngle = initialArmsAngle;
     leftLegAngle = PI/18;
     rightLegAngle = PI/18;
     neckAngle = 0;
@@ -129,14 +130,14 @@ public class Puppet {
     rightArmAngle = angle;
   }
   public void moveArms(float angle) {
-    moveArm("leftArmAngle", leftArmAngle, angle);
-    moveArm("rightArmAngle", rightArmAngle, angle);
+    moveArm("leftArmAngle", angle);
+    moveArm("rightArmAngle", angle);
   }
-  void moveArm(String variableName, float initialAngle, float angle) {
+  void moveArm(String variableName, float angle) {
     AniSequence armSequence = new AniSequence(parentApplet);
     armSequence.beginSequence();
     armSequence.add(Ani.to(this, 0.25, variableName, angle));
-    armSequence.add(Ani.to(this, 0.25, variableName, initialAngle));
+    armSequence.add(Ani.to(this, 0.25, variableName, initialArmsAngle));
     armSequence.endSequence();
     armSequence.start();
   }
